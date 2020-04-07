@@ -1,0 +1,12 @@
+{
+	"name": "Python Sample",
+	"dockerComposeFile": [
+	   "docker-compose.yml"
+	 ],
+	 "service": "web",
+	 "shutdownAction": "stopCompose",
+	 "workspaceFolder": "/workspace",
+	 "extensions": [
+	 "ms-python.python"
+	 ]
+ }
