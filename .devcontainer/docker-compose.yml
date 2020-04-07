@@ -5,7 +5,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - $PWD/..:/workspace
+      - $PWD:/workspace
     environment:
       TZ: "Asia/Tokyo"
     command: "sleep infinity"
