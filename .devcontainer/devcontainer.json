@@ -1,5 +1,5 @@
 {
-	"name": "Python Sample",
+	"name": "Remote Container Template",
 	"dockerComposeFile": [
 	   "docker-compose.yml"
 	 ],
@@ -9,5 +9,5 @@
 	 "extensions": [
 	 "ms-python.python"
 	 ],
-	 "postCreateCommand": "pip install flask"
+	 "postCreateCommand": "pip install -r requirements.txt"
  }
