@@ -19,7 +19,6 @@
 [Windows Homeの場合](https://github.com/wgdp444/remote-container-template/blob/master/doc/winhome.md)
 
 ## 各ファイルの簡単な解説
-## 各ファイルの解説
 ### Dockerfile
 コンテナの詳細を記述します。サンプルのソースではPython3公式イメージをpullし、作業ディレクトリを指定しています。
 ### docker-compose.yml
