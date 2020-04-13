@@ -8,5 +8,6 @@
 	 "workspaceFolder": "/workspace",
 	 "extensions": [
 	 "ms-python.python"
-	 ]
+	 ],
+	 "postCreateCommand": "pip install flask"
  }
