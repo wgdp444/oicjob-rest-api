@@ -17,19 +17,19 @@ def google_oauth(token):
         print(e)
         return None
 
-def default_auth(token, content_type):
+def default_auth(content_type, token=None):
     """
     基本的な認証を扱います。
 
     Parameters
     ----------
-    token : str
-        google認証用のトークン。
     content_type : str
         リクエストのコンテンツタイプ。
+    token : str default=None
+        google認証用のトークン。
     Returns
     ----------
-    idinfo : dict or None
+    idinfo : dict or None or bool
         google認証の結果。
     Raises
     ValueError:
@@ -37,5 +37,7 @@ def default_auth(token, content_type):
     """
     if content_type.lower() != 'application/json;charset=utf-8':
         return None
+    if token is None:
+        return True
     idinfo = google_oauth(token)
     return idinfo
