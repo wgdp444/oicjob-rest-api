@@ -76,7 +76,8 @@ class Subject(Base):
 class JobOffer(Base):
     __tablename__ = 'job_offers'
     id = Column('id', Integer, primary_key=True, autoincrement=True)
-    company_id = Column('company_id', Integer)
+    industry_id = Column('industry_id',ForeignKey("industrys.id"))
+    Industry = relationship('Industry',backref='industrys')
     occupation = Column('occupation', Integer)
     max_appicants = Column('max_appicants', Integer)
     starting_salary = Column('starting_salary', Integer)
@@ -102,19 +103,50 @@ def __repr__(self):
     return '<Subject: {}>'.format(self.name)
 
 
-class Company(Base):
-    __tablename__ = 'job_offers'
-    id = Column('id', Integer, primary_key=True, autoincrement=True)
-    company_id = Column('company_id', Integer)
-    occupation = Column('occupation', Integer)
-    max_appicants = Column('max_appicants', Integer)
-    starting_salary = Column('starting_salary', Integer)
-    image_url_text = Column('image_url_text', Text)
+# class Company(Base):
+#     __tablename__ = 'job_offers'
+#     id = Column('id', Integer, primary_key=True, autoincrement=True)
+#     company_id = Column('company_id', Integer)
+#     occupation = Column('occupation', Integer)
+#     max_appicants = Column('max_appicants', Integer)
+#     starting_salary = Column('starting_salary', Integer)
+#     image_url_text = Column('image_url_text', Text)
+#     created = Column(DateTime, default=datetime.now(), nullable=False)
+#     updated = Column(DateTime, default=datetime.now(), nullable=False)
+#     created_by = Column(String(31))
+#     updated_by = Column(String(31))
+
+# def to_dict(self, is_auth=False):
+#     result = {
+#         'id': self.id,
+#         'name': self.name,
+#         'created': self.created,
+#         'updated': self.updated,
+#         'created_by': self.created_by,
+#         'updated_by': self.updated_by
+#     } 
+#     if is_auth:
+#         result['user_list'] = [user.to_dict() for user in self.user_list]   
+#     return result
+# def __repr__(self):
+#     return '<Subject: {}>'.format(self.name)
+
+class Industry(Base):
+    __tablename__ = 'industrys'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    industry_name = Column('industry_name',String(40))
     created = Column(DateTime, default=datetime.now(), nullable=False)
     updated = Column(DateTime, default=datetime.now(), nullable=False)
     created_by = Column(String(31))
     updated_by = Column(String(31))
+    joboffers = relationship("JobOffer",backref="industrys")
 
+    def __init__(self, name, created_by=None, updated_by=None):
+        self.industry_name = name
+        self.updated = datetime.now()
+        self.created_by = created_by
+        self.updated_by = datetime.now()
+    
 def to_dict(self, is_auth=False):
     result = {
         'id': self.id,
