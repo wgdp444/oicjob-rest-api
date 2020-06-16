@@ -1,7 +1,3 @@
-from sqlalchemy import Column, BigInteger, Integer, String, Text, DateTime, ForeignKey, Boolean
-from sqlalchemy.orm import relationship
-from models.database import Base
-from datetime import datetime
 
 
 class User(Base):

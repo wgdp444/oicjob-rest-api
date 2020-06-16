@@ -1,0 +1,44 @@
+kind: pipeline
+type: docker
+name: drone-cloud-test-for-python3
+
+steps:
+- name: backend
+  image: python:latest
+  commands:
+  - pip3 install -r requirements.txt
+  - pytest tests/test_sample.py
+
+- name: discord
+  image: appleboy/drone-discord
+  when:
+    event: [ push, tag, pull_request ]
+    status: [ changed, failure, success ]
+  settings:
+    webhook_id: 
+      from_secret: discord_webhook_id
+    webhook_token: 
+      from_secret: discord_webhook_token
+    message: >
+      > リポジトリ名: {{repo.name}}
+
+      > 操作: {{build.event}}
+
+      > drone cloud link: {{build.link}}
+
+      > 結果:
+  
+      > 
+    
+      {{#success build.status}}
+      > テストをすべて通過しました！よかったな…で…それが何の役に立つ！
+
+      https://imgur.com/goGskeC
+      {{else}}
+      > おっと！テストを通過できなかったようです・・・まだまだ心眼が足らぬ。
+
+      https://imgur.com/OFuiEjW
+      {{/success}} 
+
+
+      
