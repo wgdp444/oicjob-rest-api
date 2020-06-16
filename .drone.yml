@@ -7,7 +7,7 @@ steps:
   image: python:latest
   commands:
   - pip3 install -r requirements.txt
-  - pytest tests/test_sample.py
+  - pytest tests/testsample.py
 
 - name: discord
   image: appleboy/drone-discord
