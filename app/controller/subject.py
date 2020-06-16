@@ -11,7 +11,7 @@ def create_subject():
     db_session.commit()
     return "true"
 
-@app.route('/oicjob/api/get_subject_all',methods=["POST"])
+@app.route('/oicjob/api/get_subject/all',methods=["POST"])
 def get_subject_all():
     idinfo = default_auth(request.headers['Content-Type'])
     if idinfo is None:
