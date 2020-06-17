@@ -28,9 +28,7 @@ steps:
 
       > ユーザー: {{commit.author}}
 
-      > コミットメッセージ: 
-        
-      > ```{{commit.message}}```
+      > コミットメッセージ: ```{{commit.message}}```
 
       > 結果:
     
