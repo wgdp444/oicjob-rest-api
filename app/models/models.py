@@ -1,20 +1,18 @@
-from sqlalchemy import Column, BigInteger, Integer, String, Text, DateTime, ForeignKey, Boolean
-from sqlalchemy.orm import relationship
-from models.database import Base
 from datetime import datetime
+from app import db
 
 
-class User(Base):
+class User(db.Model):
     __tablename__ = 'users'
-    google_id = Column('google_id', String(30), primary_key=True)
-    subject_id = Column('subject_id', Integer, ForeignKey('subjects.id'))
-    subject = relationship('Subject', backref='users', order_by='Subject.id')
-    class_number = Column('class_number', Integer)
-    is_admin = Column('is_admin', Boolean, nullable=False)
-    created = Column('created', DateTime, default=datetime.now(), nullable=False)
-    updated = Column('updated', DateTime, default=datetime.now(), nullable=False)
-    created_by = Column('created_by', String(31))
-    updated_by = Column('updated_by', String(31))
+    google_id = db.Column('google_id', db.String(30), primary_key=True)
+    subject_id = db.Column('subject_id', db.Integer, db.ForeignKey('subjects.id'))
+    subject = db.relationship('Subject', backref='users', order_by='Subject.id')
+    class_number = db.Column('class_number', db.Integer)
+    is_admin = db.Column('is_admin', db.Boolean, nullable=False)
+    created = db.Column('created', db.DateTime, default=datetime.now(), nullable=False)
+    updated = db.Column('updated', db.DateTime, default=datetime.now(), nullable=False)
+    created_by = db.Column('created_by', db.String(31))
+    updated_by = db.Column('updated_by', db.String(31))
 
 
 
@@ -42,15 +40,15 @@ class User(Base):
         return '<User: {}>'.format(self.id)
 
 
-class Subject(Base):
+class Subject(db.Model):
     __tablename__ = 'subjects'
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column('name', String(31), nullable=False)
-    user_list = relationship('User', backref='subjects')
-    created = Column(DateTime, default=datetime.now(), nullable=False)
-    updated = Column(DateTime, default=datetime.now(), nullable=False)
-    created_by = Column(String(31))
-    updated_by = Column(String(31))
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column('name', db.String(31), nullable=False)
+    user_list = db.relationship('User', backref='subjects')
+    created = db.Column(db.DateTime, default=datetime.now(), nullable=False)
+    updated = db.Column(db.DateTime, default=datetime.now(), nullable=False)
+    created_by = db.Column(db.String(31))
+    updated_by = db.Column(db.String(31))
 
     def __init__(self, name, created_by=None, updated_by=None):
         self.name = name
@@ -73,19 +71,19 @@ class Subject(Base):
     def __repr__(self):
         return '<Subject: {}>'.format(self.name)
 
-class JobOffer(Base):
+class JobOffer(db.Model):
     __tablename__ = 'job_offers'
-    id = Column('id', Integer, primary_key=True, autoincrement=True)
-    industry_id = Column('industry_id',ForeignKey("industrys.id"))
-    Industry = relationship('Industry',backref='industrys')
-    occupation = Column('occupation', Integer)
-    max_appicants = Column('max_appicants', Integer)
-    starting_salary = Column('starting_salary', Integer)
-    image_url_text = Column('image_url_text', Text)
-    created = Column(DateTime, default=datetime.now(), nullable=False)
-    updated = Column(DateTime, default=datetime.now(), nullable=False)
-    created_by = Column(String(31))
-    updated_by = Column(String(31))
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    industry_id = db.Column('industry_id',db.ForeignKey("industrys.id"))
+    Industry = db.relationship('Industry',backref='industrys')
+    occupation = db.Column('occupation', db.Integer)
+    max_appicants = db.Column('max_appicants', db.Integer)
+    starting_salary = db.Column('starting_salary', db.Integer)
+    image_url_db.Text = db.Column('image_url_db.Text', db.Text)
+    created = db.Column(db.DateTime, default=datetime.now(), nullable=False)
+    updated = db.Column(db.DateTime, default=datetime.now(), nullable=False)
+    created_by = db.Column(db.String(31))
+    updated_by = db.Column(db.String(31))
 
 def to_dict(self, is_auth=False):
     result = {
@@ -103,18 +101,18 @@ def __repr__(self):
     return '<Subject: {}>'.format(self.name)
 
 
-# class Company(Base):
+# class Company(db.Model):
 #     __tablename__ = 'job_offers'
-#     id = Column('id', Integer, primary_key=True, autoincrement=True)
-#     company_id = Column('company_id', Integer)
-#     occupation = Column('occupation', Integer)
-#     max_appicants = Column('max_appicants', Integer)
-#     starting_salary = Column('starting_salary', Integer)
-#     image_url_text = Column('image_url_text', Text)
-#     created = Column(DateTime, default=datetime.now(), nullable=False)
-#     updated = Column(DateTime, default=datetime.now(), nullable=False)
-#     created_by = Column(String(31))
-#     updated_by = Column(String(31))
+#     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+#     company_id = db.Column('company_id', db.Integer)
+#     occupation = db.Column('occupation', db.Integer)
+#     max_appicants = db.Column('max_appicants', db.Integer)
+#     starting_salary = db.Column('starting_salary', db.Integer)
+#     image_url_db.Text = db.Column('image_url_db.Text', db.Text)
+#     created = db.Column(db.DateTime, default=datetime.now(), nullable=False)
+#     updated = db.Column(db.DateTime, default=datetime.now(), nullable=False)
+#     created_by = db.Column(db.String(31))
+#     updated_by = db.Column(db.String(31))
 
 # def to_dict(self, is_auth=False):
 #     result = {
@@ -131,15 +129,15 @@ def __repr__(self):
 # def __repr__(self):
 #     return '<Subject: {}>'.format(self.name)
 
-class Industry(Base):
+class Industry(db.Model):
     __tablename__ = 'industrys'
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    industry_name = Column('industry_name',String(40))
-    created = Column(DateTime, default=datetime.now(), nullable=False)
-    updated = Column(DateTime, default=datetime.now(), nullable=False)
-    created_by = Column(String(31))
-    updated_by = Column(String(31))
-    joboffers = relationship("JobOffer",backref="industrys")
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    industry_name = db.Column('industry_name',db.String(40))
+    created = db.Column(db.DateTime, default=datetime.now(), nullable=False)
+    updated = db.Column(db.DateTime, default=datetime.now(), nullable=False)
+    created_by = db.Column(db.String(31))
+    updated_by = db.Column(db.String(31))
+    joboffers = db.relationship("JobOffer",backref="industrys")
 
     def __init__(self, name, created_by=None, updated_by=None):
         self.industry_name = name
