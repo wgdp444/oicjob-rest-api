@@ -20,22 +20,24 @@ steps:
     webhook_token: 
       from_secret: discord_webhook_token
     message: >
-      > リポジトリ名: {{repo.name}}
-
-      > 操作: {{build.event}}
+      > #{{build.number}} {{repo.name}}/{{commit.branch}}
 
       > drone cloud link: {{build.link}}
 
+      > 操作: {{build.event}}
+
+      > ユーザー: {{commit.author}}
+
+      > コミットメッセージ: ```{{commit.message}}```
+
       > 結果:
-  
-      > 
     
       {{#success build.status}}
-      > テストをすべて通過しました！よかったな…で…それが何の役に立つ！
+      > `テストをすべて通過しました！よかったな…で…それが何の役に立つ！`
 
       https://imgur.com/goGskeC
       {{else}}
-      > おっと！テストを通過できなかったようです・・・まだまだ心眼が足らぬ。
+      > `おっと！テストを通過できなかったようです・・・まだまだ心眼が足らぬ。`
 
       https://imgur.com/OFuiEjW
       {{/success}} 
