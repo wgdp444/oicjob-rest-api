@@ -25,7 +25,7 @@ def not_found(e):
     return jsonify({'result': 'not found'})
 
 @app.route('/oicjob/api/test',methods=["POST"])
-def get_user():
+def test():
     return jsonify({'test': 'ok'})
 
 # @app.errorhandler(Exception)
