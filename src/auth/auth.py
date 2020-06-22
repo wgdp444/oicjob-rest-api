@@ -5,7 +5,7 @@ from google.oauth2 import id_token
 from google.auth.transport import requests
 
 import os
-
+testing = False
 def google_oauth(token):
     try:
         idinfo = id_token.verify_oauth2_token(token, requests.Request(), os.getenv("CLIENT_ID"))
@@ -38,6 +38,8 @@ def default_auth(content_type, token=None):
     if content_type.lower() != 'application/json;charset=utf-8':
         return None
     if token is None:
-        return True
+        return None
+    if testing:
+        return {'sub': token}
     idinfo = google_oauth(token)
     return idinfo

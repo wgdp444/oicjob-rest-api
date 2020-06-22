@@ -1,5 +1,5 @@
 from datetime import datetime
-from app import db
+from database import db
 
 
 class User(db.Model):
@@ -79,7 +79,7 @@ class JobOffer(db.Model):
     occupation = db.Column('occupation', db.Integer)
     max_appicants = db.Column('max_appicants', db.Integer)
     starting_salary = db.Column('starting_salary', db.Integer)
-    image_url_db.Text = db.Column('image_url_db.Text', db.Text)
+    image_url_text = db.Column('image_url_db.Text', db.Text)
     created = db.Column(db.DateTime, default=datetime.now(), nullable=False)
     updated = db.Column(db.DateTime, default=datetime.now(), nullable=False)
     created_by = db.Column(db.String(31))
