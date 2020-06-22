@@ -5,6 +5,8 @@ from controller import login, user, subject, joboffer
 from auth.auth import default_auth
 from models.models import User, Subject
 from models.database import db_session
+from flask_sqlalchemy import SQLAlchemy
+
 
 from sqlalchemy.exc import IntegrityError
 
@@ -15,7 +17,9 @@ app.register_blueprint(login.app)
 app.register_blueprint(user.app)
 app.register_blueprint(subject.app)
 app.register_blueprint(joboffer.app)
+app.config.from_object('config.Config')
 CORS(app)
+db = SQLAlchemy(app)
 @app.errorhandler(403)
 def forbidden(e):
     return jsonify({'result': 'forbidden'})
@@ -23,6 +27,10 @@ def forbidden(e):
 @app.errorhandler(404)
 def not_found(e):
     return jsonify({'result': 'not found'})
+
+@app.route('/oicjob/api/test',methods=["POST"])
+def get_user():
+    return jsonify({'test': 'ok'})
 
 # @app.errorhandler(Exception)
 # def api_error(e):

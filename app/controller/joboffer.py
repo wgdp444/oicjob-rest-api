@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request, abort
 from models.models import JobOffer
 from auth.auth import default_auth
+from database import db
 
 app = Blueprint('joboffer', __name__)
 
@@ -18,9 +19,9 @@ def create_joboffer():
     # if idinfo is None:
     #     abort(403)
     try:
-        db_session.add(JobOffer(request.json['industry_id'],request.json['occupation'],
+        db.session.add(JobOffer(request.json['industry_id'],request.json['occupation'],
                                 request.json['max_appicants'],request.json['starting_salary'],
                                 request.json['image_url_text']))
-        db_session.comit()
+        db.session.comit()
         return "true"
     
