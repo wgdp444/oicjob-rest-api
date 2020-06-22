@@ -24,4 +24,7 @@ def create_joboffer():
                                 request.json['image_url_text']))
         db.session.comit()
         return "true"
+    except IntegrityError as e:
+        # print(traceback.format_exc())
+        return "false"
     

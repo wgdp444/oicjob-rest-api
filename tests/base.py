@@ -1,14 +1,14 @@
 from flask_testing import TestCase
 
-from app.app import app
+from app import api
 
-from app.database import db, init_db
+from database import db, init_db
 
 
 class BaseTestCase(TestCase):
   def create_app(self):
-    app.config.from_object('app.config.TestingConfig')
-    return app
+    api.config.from_object('config.TestingConfig')
+    return api
 
   def setUp(self):
     self.app = self.app.test_client()
