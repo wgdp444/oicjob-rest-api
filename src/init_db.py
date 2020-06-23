@@ -1,2 +1,2 @@
-from database import init_db
-init_db()
+from database import create_db
+create_db()

@@ -9,3 +9,6 @@ db = SQLAlchemy()
 def init_db(app):
     db.init_app(app)
     Migrate(app, db)
+
+def create_db():
+    db.create_all()
