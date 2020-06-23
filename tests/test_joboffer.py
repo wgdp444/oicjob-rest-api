@@ -16,18 +16,18 @@ REQUEST_HEADERS = {
 class TestJobOffer(BaseTestCase):
     @mock.patch('auth.auth._google_oauth')
     def test_create_joboffer(self, mock_google_oauth):
-      # 認証回避のmock
-      mock_google_oauth.return_value = {'sub': USER_ID}
-      request_json = {
-        'token': USER_ID,
-        'industry_id': 1,
-        'occupation': 1,
-        'max_appicants': 1,
-        'starting_salary': 1,
-        'image_url_text': '1'
-      }
-      response = self.app.post('/oicjob/api/create_joboffer', headers=REQUEST_HEADERS,json=request_json)
-      assert(json.loads(response.get_data()) == {'result': True})
+        # 認証回避のmock
+        mock_google_oauth.return_value = {'sub': USER_ID}
+        request_json = {
+            'token': USER_ID,
+            'industry_id': 1,
+            'occupation': 1,
+            'max_appicants': 1,
+            'starting_salary': 1,
+            'image_url_text': '1'
+        }
+        response = self.app.post('/oicjob/api/create_joboffer', headers=REQUEST_HEADERS,json=request_json)
+        assert(json.loads(response.get_data()) == {'result': True})
 
     @mock.patch('auth.auth._google_oauth')
     def test_get_joboffer(self, mock_google_oauth):
