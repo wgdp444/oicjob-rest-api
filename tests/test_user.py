@@ -18,7 +18,7 @@ class TestUser(BaseTestCase):
         response = self.app.post('/oicjob/api/test')
         self.assert_200(response)
         assert(
-        json.loads(response.get_data()) == {'test': 'ok'}
+        json.loads(response.get_data()) == {'result': 'ok'}
         )
 
     @mock.patch('auth.auth._google_oauth')
