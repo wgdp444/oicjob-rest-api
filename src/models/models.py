@@ -83,22 +83,34 @@ class JobOffer(db.Model):
     created = db.Column(db.DateTime, default=datetime.now(), nullable=False)
     updated = db.Column(db.DateTime, default=datetime.now(), nullable=False)
     created_by = db.Column(db.String(31))
-    updated_by = db.Column(db.String(31))
+    updated_by = db.Column(db.String(31), default=None)
 
-def to_dict(self, is_auth=False):
-    result = {
-        'id': self.id,
-        'name': self.name,
-        'created': self.created,
-        'updated': self.updated,
-        'created_by': self.created_by,
-        'updated_by': self.updated_by
-    } 
-    if is_auth:
-        result['user_list'] = [user.to_dict() for user in self.user_list]   
-    return result
-def __repr__(self):
-    return '<Subject: {}>'.format(self.name)
+    def __init__(self, industry_id, occupation, max_appicants, starting_salary, image_url_text, created_by='system', updated_by='system'):
+        self.industry_id = industry_id
+        self.occupation = occupation
+        self.max_appicants = max_appicants
+        self.starting_salary = starting_salary
+        self.image_url_text = image_url_text
+        self.created_by = created_by
+        self.updated_by = updated_by
+        self.updated = datetime.now()
+
+    def to_dict(self, is_auth=False):
+        result = {
+            'industry_id': self.industry_id,
+            # 'indusry': self.Industry.to_dict(),
+            'occupation': self.occupation,
+            'max_appicants': self.max_appicants,
+            'starting_salary': self.starting_salary,
+            'image_url_text': self.image_url_text,
+            'created': self.created,
+            'updated': self.updated,
+            'created_by': self.created_by,
+            'updated_by': self.updated_by,
+        }    
+        return result
+    def __repr__(self):
+        return '<Subject: {}>'.format(self.name)
 
 
 # class Company(db.Model):
@@ -139,23 +151,21 @@ class Industry(db.Model):
     updated_by = db.Column(db.String(31))
     joboffers = db.relationship("JobOffer",backref="industrys")
 
-    def __init__(self, name, created_by=None, updated_by=None):
-        self.industry_name = name
+    def __init__(self, industry_name, created_by=None, updated_by=None):
+        self.industry_name = industry_name
         self.updated = datetime.now()
         self.created_by = created_by
         self.updated_by = datetime.now()
     
-def to_dict(self, is_auth=False):
-    result = {
-        'id': self.id,
-        'name': self.name,
-        'created': self.created,
-        'updated': self.updated,
-        'created_by': self.created_by,
-        'updated_by': self.updated_by
-    } 
-    if is_auth:
-        result['user_list'] = [user.to_dict() for user in self.user_list]   
-    return result
-def __repr__(self):
-    return '<Subject: {}>'.format(self.name)
+    def to_dict(self, is_auth=False):
+        result = {
+            'id': self.id,
+            'industry_name': self.industry_name,
+            'created': self.created,
+            'updated': self.updated,
+            'created_by': self.created_by,
+            'updated_by': self.updated_by
+        }    
+        return result
+    def __repr__(self):
+        return '<Subject: {}>'.format(self.name)
