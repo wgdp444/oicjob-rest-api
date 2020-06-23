@@ -21,7 +21,7 @@ class TestUser(BaseTestCase):
 		json.loads(response.get_data()) == {'test': 'ok'}
 		)
 
-   @mock.patch('auth.auth._google_oauth')
+    @mock.patch('auth.auth._google_oauth')
    	def test_create_user(self, mock_google_oauth):
 		# 認証回避のmock
 		mock_google_oauth.return_value = {'sub': USER_ID}
@@ -34,7 +34,7 @@ class TestUser(BaseTestCase):
         response = self.app.post('/oicjob/api/create_user', headers=REQUEST_HEADERS,json=request_json)
         assert(json.loads(response.get_data()) == {'result': True})
 
-   @mock.patch('auth.auth._google_oauth')
+    @mock.patch('auth.auth._google_oauth')
 	def test_get_user(self, mock_google_oauth):
 		# 認証回避のmock
 		mock_google_oauth.return_value = {'sub': USER_ID}
