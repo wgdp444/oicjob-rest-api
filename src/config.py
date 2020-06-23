@@ -1,6 +1,6 @@
 import os
-databese_file = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'oicjob.db')
-test_databese_file = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'test_oicjob.db')
+databese_file = os.path.join(os.path.abspath(os.path.dirname(__file__)), '../oicjob.db')
+test_databese_file = os.path.join(os.path.abspath(os.path.dirname(__file__)), '../test_oicjob.db')
 
 class DevelopmentConfig:
 
