@@ -29,4 +29,35 @@ def create_joboffer():
         # スタックトレース
         print(traceback.format_exc())
         return jsonify({'result': False})
-    
+
+@app.route('/oicjob/api/delete_joboffer',methods=["POST"])
+def delete_joboffer():
+    idinfo = default_auth(request.headers['Content-Type'], request.json['token'])
+    if idinfo is None:
+        abort(403)
+    try:
+        jobinfo = JobOffer.query.filter_by(id=request.json['id']).first()
+        db.session.delete(jobinfo)
+        db.session.commit()
+        return jsonify({'result': True})
+    except:
+        return jsonify({'result': False})
+
+@app.route('/oicjob/api/update_joboffer',methods=["POST"])
+def update_joboffer():
+    idinfo = default_auth(request.headers['Content-Type'], request.json['token'])
+    if idinfo is None:
+        abort(403)
+    try:
+        jobinfo = JobOffer.query.filter(id=request.json['id']).first()
+        jobinfo.industry_id = request.json['industry_id']
+        jobinfo.occupation = request.json['occupation'] 
+        jobinfo.max_appicants = request.json['max_appicants']
+        jobinfo.starting_salary = request.json['starting_salary']
+        jobinfo.image_url_text = request.json['image_url_text']
+        jobinfo.updated = request.json['updated']
+        jobinfo.updated_by = request.json['updated_by']
+        db.session.commit()
+        return jsonify({'result': True})
+    except:
+        return jsonify({'result': False})

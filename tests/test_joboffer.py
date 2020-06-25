@@ -4,6 +4,7 @@ from database import db
 from models.models import JobOffer
 
 import json
+import pytest
 import app
 from unittest import mock
 
@@ -55,3 +56,46 @@ class TestJobOffer(BaseTestCase):
             assert type(joboffer['updated']) == str
             assert joboffer['created_by'] == 'system'
             assert joboffer['updated_by'] == 'system'
+
+    @mock.patch('auth.auth._google_oauth')
+    def test_deleate_joboffer(self, mock_google_oauth):
+        # 認証回避のmock
+        mock_google_oauth.return_value = {'sub': USER_ID}
+        db.session.add(JobOffer(1, 1, 1, 1, '1'))
+        db.session.commit()
+
+        request_json = {
+            'token': USER_ID,
+            'id': 1
+        }
+        response = self.app.post('/oicjob/api/delete_joboffer', headers=REQUEST_HEADERS,json=request_json)
+        assert(json.loads(response.get_data()) == {'result': True})
+        request_json = {
+            'token': USER_ID,
+            'id': 234
+        }
+        response = self.app.post('/oicjob/api/delete_joboffer', headers=REQUEST_HEADERS,json=request_json)
+        assert(json.loads(response.get_data()) == {'result':False})
+
+    @mock.patch('auth.auth._google_oauth')
+    @pytest.mark.parametrize('id,industry_id,occupation,max_appicants,starting_salary,image_url_text'[
+        (1,1,1,1,1,'1'),
+        (3,3,3,3,3,'3')
+    ])
+    def test_update_joboffer(self, mock_google_oauth,id,industry_id,occupation,max_appicants,starting_salary,image_url_text):
+        # 認証回避のmock
+        mock_google_oauth.return_value = {'sub': USER_ID}
+        db.session.add(JobOffer(1, 1, 1, 1, '1'))
+        db.session.commit()
+
+        request_json = {
+            'token': USER_ID,
+            'id': id,
+            'industry_id': industry_id,
+            'occupation': occupation,
+            'max_appicants': max_appicants,
+            'starting_salary': starting_salary,
+            'image_url_text': image_url_text
+        }
+        response = self.app.post('/oicjob/api/delete_joboffer', headers=REQUEST_HEADERS,json=request_json)
+        assert(json.loads(response.get_data()) == {'result': True})
