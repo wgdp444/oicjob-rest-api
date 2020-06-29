@@ -12,7 +12,7 @@ steps:
 - name: discord
   image: appleboy/drone-discord
   when:
-    event: [ push, tag, pull_request ]
+    event: [ push, tag]
     status: [ changed, failure, success ]
   settings:
     webhook_id: 
