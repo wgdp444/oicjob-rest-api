@@ -4,7 +4,7 @@ from database import db
 from models.models import JobOffer
 
 import json
-import pytest
+from parameterized import parameterized
 import app
 from unittest import mock
 
@@ -14,8 +14,9 @@ REQUEST_HEADERS = {
         'Access-Control-Allow-Origin': 'http://127.0.0.1:4649'
         }
 
+@mock.patch('auth.auth._google_oauth')
 class TestJobOffer(BaseTestCase):
-    @mock.patch('auth.auth._google_oauth')
+    # @mock.patch('auth.auth._google_oauth')
     def test_create_joboffer(self, mock_google_oauth):
         # 認証回避のmock
         mock_google_oauth.return_value = {'sub': USER_ID}
@@ -30,7 +31,7 @@ class TestJobOffer(BaseTestCase):
         response = self.app.post('/oicjob/api/create_joboffer', headers=REQUEST_HEADERS,json=request_json)
         assert(json.loads(response.get_data()) == {'result': True})
 
-    @mock.patch('auth.auth._google_oauth')
+    
     def test_get_joboffer(self, mock_google_oauth):
         # 認証回避のmock
         mock_google_oauth.return_value = {'sub': USER_ID}
@@ -42,8 +43,6 @@ class TestJobOffer(BaseTestCase):
         }
         response = self.app.post('/oicjob/api/get_joboffer/all', headers=REQUEST_HEADERS,json=request_json)
         response_dict = json.loads(response.get_data())
-
-        # assert(json.loads(response.get_data()) == {'result': True})
 
         # 変動する時刻があるため項目ごとのテスト
         for joboffer in response_dict['joboffers']:
@@ -57,8 +56,12 @@ class TestJobOffer(BaseTestCase):
             assert joboffer['created_by'] == 'system'
             assert joboffer['updated_by'] == 'system'
 
-    @mock.patch('auth.auth._google_oauth')
-    def test_deleate_joboffer(self, mock_google_oauth):
+    
+    @parameterized.expand([
+        (1, True),
+        (234, False)
+    ])
+    def test_deleate_joboffer(self, mock_google_oauth, id, result):
         # 認証回避のmock
         mock_google_oauth.return_value = {'sub': USER_ID}
         db.session.add(JobOffer(1, 1, 1, 1, '1'))
@@ -66,23 +69,16 @@ class TestJobOffer(BaseTestCase):
 
         request_json = {
             'token': USER_ID,
-            'id': 1
+            'id': id
         }
         response = self.app.post('/oicjob/api/delete_joboffer', headers=REQUEST_HEADERS,json=request_json)
-        assert(json.loads(response.get_data()) == {'result': True})
-        request_json = {
-            'token': USER_ID,
-            'id': 234
-        }
-        response = self.app.post('/oicjob/api/delete_joboffer', headers=REQUEST_HEADERS,json=request_json)
-        assert(json.loads(response.get_data()) == {'result':False})
+        assert(json.loads(response.get_data()) == {'result': result})
 
-    @mock.patch('auth.auth._google_oauth')
-    @pytest.mark.parametrize('id,industry_id,occupation,max_appicants,starting_salary,image_url_text'[
-        (1,1,1,1,1,'1'),
-        (3,3,3,3,3,'3')
+    @parameterized.expand([
+        (1, 1, 1, 1, 1, '1', True),
+        (3, 3, 3, 3, 3, '3', False)
     ])
-    def test_update_joboffer(self, mock_google_oauth,id,industry_id,occupation,max_appicants,starting_salary,image_url_text):
+    def test_update_joboffer(self, mock_google_oauth, id, industry_id, occupation, max_appicants, starting_salary, image_url_text, result):
         # 認証回避のmock
         mock_google_oauth.return_value = {'sub': USER_ID}
         db.session.add(JobOffer(1, 1, 1, 1, '1'))
@@ -98,4 +94,4 @@ class TestJobOffer(BaseTestCase):
             'image_url_text': image_url_text
         }
         response = self.app.post('/oicjob/api/delete_joboffer', headers=REQUEST_HEADERS,json=request_json)
-        assert(json.loads(response.get_data()) == {'result': True})
+        assert(json.loads(response.get_data()) == {'result': result})
