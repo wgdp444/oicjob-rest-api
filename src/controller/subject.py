@@ -78,6 +78,6 @@ def searches_subject():
         else:
             searches_request[column] = None
 
-    subjects = search.query(Subject, searches_request)
+    subjects = common.search_query(Subject, searches_request)
     return jsonify({'subjects': [subject.to_dict() for subject in subjects]})
         
