@@ -54,7 +54,7 @@ class Subject(db.Model):
         self.name = name
         self.updated = datetime.now()
         self.created_by = created_by
-        self.updated_by = datetime.now()
+        self.updated_by = updated_by
 
     def to_dict(self, is_auth=False):
         result = {
@@ -68,6 +68,7 @@ class Subject(db.Model):
         if is_auth:
             result['user_list'] = [user.to_dict() for user in self.user_list]   
         return result
+
     def __repr__(self):
         return '<Subject: {}>'.format(self.name)
 
