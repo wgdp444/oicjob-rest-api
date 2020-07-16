@@ -1,8 +1,9 @@
-from flask import Blueprint, jsonify, request, abort
+from flask import Blueprint, jsonify, request, abort, make_response
 from models.models import Subject
 from auth.auth import default_auth
 from database import db
 from controller.modules import common
+import json
 
 import traceback
 
@@ -20,16 +21,24 @@ def create_subject():
         db.session.commit()
         return jsonify({'result': True}), 201
     except:
-        return jsonify({'result': False})
+        return jsonify({'result': False}), 500
     
 
 @app.route('/oicjob/api/subject/get',methods=["POST"])
 def get_subject_all():
-    idinfo = default_auth(request.headers['Content-Type'])
+    idinfo = default_auth(request.headers['Content-Type'], request.json['token'])
     if idinfo is None:
         abort(403)
     subjects = Subject.query.all()
     return jsonify({'subjects': [subject.to_dict() for subject in subjects]})
+
+@app.route('/oicjob/api/subject/get/<int:id>',methods=["POST"])
+def get_subject(id):
+    idinfo = default_auth(request.headers['Content-Type'])
+    if idinfo is None:
+        abort(403)
+    subject = Subject.query.filter_by(id=id).first()
+    return jsonify(subject.to_dict())
 
 @app.route('/oicjob/api/subject/update/<int:id>',methods=["POST"])
 def update_joboffer(id):
@@ -39,30 +48,30 @@ def update_joboffer(id):
     try:
         subject = Subject.query.filter_by(id=id).first()
         if subject is None:
-            return jsonify({'result': 'record not found'}), 400
+            return jsonify({'message': 'record not found'}), 400
         subject.name = request.json['name']
         subject.updated_by = request.json['updated_by']
         subject.updated = datetime.now()
         db.session.commit()
-        return jsonify({'result': True}), 204
+        return make_response('', 204)
     except Exception as e:
-        return jsonify({'result': False}), 500
+        return jsonify({'message': 'failed'}), 500
 
-@app.route('/oicjob/api/subject/delete/<int:id>',methods=["POST"])
-def delete_subject(id):
-    idinfo = default_auth(request.headers['Content-Type'], request.json['token'])
+@app.route('/oicjob/api/subject/delete/<int:subject_id>',methods=["POST"])
+def delete_subject(subject_id):
+    idinfo = default_auth(request.headers['Content-Type'], request.json['token'])   
     if idinfo is None:
         abort(403)
     try:
-        subject = Subject.query.filter_by(id=id).first()
+        subject = Subject.query.filter_by(id=subject_id).first()
         if subject is None:
-            return jsonify({'result': 'record not found'}), 400
+            return jsonify({'message': 'record not found'}), 400
         db.session.delete(subject)
         db.session.commit()
-        return jsonify({'result': True}), 204
+        return make_response('', 204)
     except:
         # print(traceback.format_exc())
-        return jsonify({'result': False}), 500
+        return jsonify({'message': 'failed'}), 500
 
 @app.route('/oicjob/api/subject/seartches',methods=["POST"])
 def searches_subject():

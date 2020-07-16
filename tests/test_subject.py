@@ -47,7 +47,6 @@ class TestSubject(BaseTestCase):
         }
         response = self.app.post('/oicjob/api/subject/get', headers=REQUEST_HEADERS,json=request_json)
         response_dict = json.loads(response.get_data())
-
         # all
         # 変動する時刻があるため項目ごとのテスト
         for subject in response_dict['subjects']:
@@ -61,46 +60,49 @@ class TestSubject(BaseTestCase):
 
     
     @parameterized.expand([
-        (1, True),
-        (234, False)
+        (1, 204),
+        (234, 400),
     ])
-    def test_deleate_subject(self, mock_google_oauth, id, result):
+    def test_deleate_subject(self, mock_google_oauth, id, status_code):
         # 認証回避のmock
-        url = f'/oicjob/api/subject/delete/{id}'
+        url = f'/oicjob/api/subject/delete/{str(id)}'
+        print(url)
         mock_google_oauth.return_value = {'sub': USER_ID}
         db.session.add(Subject('息絶えた学科'))
         db.session.commit()
 
         request_json = {
             'token': USER_ID,
-            'id': id
         }
         response = self.app.post(url, headers=REQUEST_HEADERS,json=request_json)
-        assert(json.loads(response.get_data()) == {'result': result})
+        assert(response.status_code == status_code)
 
     @parameterized.expand([
-        (1, '息絶えた学科', 'ninjadaizo', True),
-        (234, 'テスト学科', 'ninjadaizo', False)
+        (1, {'name': 'テスト学科', 'updated_by': 'ninjadaizo'}, {'name': 'テスト学科', 'updated_by': 'ninjadaizo'}, 204),
+        (234, {'name': 'テスト学科', 'updated_by': 'ninjadaizo'}, {'name': None, 'updated_by': None}, 400)
     ])
-    def test_update_subject(self, mock_google_oauth, id, name, updated_by, result):
+    def test_update_subject(self, mock_google_oauth, id, inputs, results, status_code):
         # 認証回避のmock
-        url = f'/oicjob/api/subject/update/{id}'
+        url = f'/oicjob/api/subject/update/{str(id)}'
         mock_google_oauth.return_value = {'sub': USER_ID}
         db.session.add(Subject('息絶えた学科'))
         db.session.commit()
 
         request_json = {
             'token': USER_ID,
-            'name': name,
-            'updated_by': updated_by,
+            'name': inputs['name'],
+            'updated_by': inputs['updated_by'],
         }
 
         response = self.app.post(url, headers=REQUEST_HEADERS,json=request_json)
-        assert(json.loads(response.get_data()) == {'result': result})
+        assert(response.status_code == status_code)
 
         subject = Subject.query.filter_by(id=id).first()
-        assert subject.name == name
-        assert subject.update_by == updated_by
+        if subject is not None:
+            assert subject.name == results['name']
+            assert subject.updated_by == results['updated_by']
+        
+
     @parameterized.expand([
         ({'name': '息絶えた学科'}, {'names': ('息絶えた学科', ), 'updated_bys': ('ninjadaizo', )}),
         ({'updated_by': 'ninjadaizo'}, {'names': ('息絶えた学科', 'テスト学科'), 'updated_bys': ('ninjadaizo', )}),
