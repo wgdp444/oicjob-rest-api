@@ -6,7 +6,6 @@ from auth import auth
 from database import db, init_db
 
 class BaseTestCase(TestCase):
-  TOKEN = 4649
   def create_app(self):
     app.config.from_object('config.TestingConfig')
     return app
