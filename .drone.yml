@@ -4,7 +4,7 @@ name: drone-cloud-test-for-python3
 
 steps:
 - name: backend
-  image: python:3.8.2
+  image: python:3.7.4
   commands:
   - pip3 install -r requirements.txt
   - cd src
