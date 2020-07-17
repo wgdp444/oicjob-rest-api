@@ -16,7 +16,7 @@ class User(db.Model):
 
 
 
-    def __init__(self, google_id, subject_id, is_admin, created_by=None, updated_by=None, class_number=None):
+    def __init__(self, google_id, subject_id, is_admin, created_by='system', updated_by='system', class_number=None):
         self.google_id = google_id
         self.subject_id = subject_id
         self.class_number = class_number
@@ -50,7 +50,7 @@ class Subject(db.Model):
     created_by = db.Column(db.String(31))
     updated_by = db.Column(db.String(31))
 
-    def __init__(self, name, created_by=None, updated_by=None):
+    def __init__(self, name, created_by='system', updated_by='system'):
         self.name = name
         self.updated = datetime.now()
         self.created_by = created_by
@@ -152,7 +152,7 @@ class Industry(db.Model):
     updated_by = db.Column(db.String(31))
     joboffers = db.relationship("JobOffer",backref="industrys")
 
-    def __init__(self, industry_name, created_by=None, updated_by=None):
+    def __init__(self, industry_name, created_by='system', updated_by='system'):
         self.industry_name = industry_name
         self.updated = datetime.now()
         self.created_by = created_by

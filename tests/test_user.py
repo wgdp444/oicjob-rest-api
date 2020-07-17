@@ -54,5 +54,5 @@ class TestUser(BaseTestCase):
         assert response_dict['class_number'] == 1
         assert response_dict['is_admin'] == False
         assert response_dict['subject_id'] == 1
-        assert response_dict['created_by'] == None
+        assert response_dict['created_by'] == 'system'
         assert type(response_dict['created']) == str

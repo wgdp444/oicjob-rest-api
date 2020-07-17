@@ -28,10 +28,19 @@ def not_found(e):
 def test():
     return jsonify({'result': 'ok'})
 
-# @app.errorhandler(Exception)
-# def api_error(e):
-#     print(e.args)
-#     return jsonify({'result': 'api error'}), 500
+@app.errorhandler(Exception)
+def api_error(e):
+    print(traceback.format_exc())
+    return jsonify({'result': 'api error'})
+
+@app.after_request
+def after_request(response):
+    # application/jsonで204を返すための処理
+    # 参照: https://www.erol.si/2018/03/flask-return-204-no-content-response/
+    if response.status_code == 204:
+        response.mimetype = app.config['JSONIFY_MIMETYPE']
+    return response
+
 
 if __name__ == '__main__':
     app.run(debug = True, host='0.0.0.0', port=4649)
