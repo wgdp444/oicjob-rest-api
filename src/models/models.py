@@ -75,18 +75,20 @@ class Subject(db.Model):
 class JobOffer(db.Model):
     __tablename__ = 'job_offers'
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
-    industry_id = db.Column('industry_id',db.ForeignKey("industrys.id"))
-    Industry = db.relationship('Industry',backref='industrys')
-    occupation = db.Column('occupation', db.Integer)
+    company_name = db.Column('company_name', db.String(31), nullable=False)
+    industry_id = db.Column('industry_id', db.ForeignKey("industrys.id"))
+    industry = db.relationship('Industry', backref='job_offers', order_by='Industry.id')
+    occupation = db.Column('occupation', db.String(254))
     max_appicants = db.Column('max_appicants', db.Integer)
     starting_salary = db.Column('starting_salary', db.Integer)
-    image_url_text = db.Column('image_url_db.Text', db.Text)
+    image_url_text = db.Column('image_url_text', db.Text)
     created = db.Column(db.DateTime, default=datetime.now(), nullable=False)
     updated = db.Column(db.DateTime, default=datetime.now(), nullable=False)
     created_by = db.Column(db.String(31))
     updated_by = db.Column(db.String(31), default=None)
 
-    def __init__(self, industry_id, occupation, max_appicants, starting_salary, image_url_text, created_by='system', updated_by='system'):
+    def __init__(self, company_name, industry_id, occupation, max_appicants, starting_salary, image_url_text, created_by='system', updated_by='system'):
+        self.company_name = company_name
         self.industry_id = industry_id
         self.occupation = occupation
         self.max_appicants = max_appicants
@@ -98,8 +100,9 @@ class JobOffer(db.Model):
 
     def to_dict(self, is_auth=False):
         result = {
-            'industry_id': self.industry_id,
-            # 'indusry': self.Industry.to_dict(),
+            'id': self.id,
+            'company_name': self.company_name,
+            # 'industry_id': self.industry_id,
             'occupation': self.occupation,
             'max_appicants': self.max_appicants,
             'starting_salary': self.starting_salary,
@@ -109,9 +112,13 @@ class JobOffer(db.Model):
             'created_by': self.created_by,
             'updated_by': self.updated_by,
         }    
+        if self.industry is None:
+            result['industry'] = {}
+        else:
+            result['industry'] = self.industry.to_dict(),
         return result
     def __repr__(self):
-        return '<Subject: {}>'.format(self.name)
+        return '<JobOffer: {}>'.format(self.company_name)
 
 
 # class Company(db.Model):
@@ -145,23 +152,23 @@ class JobOffer(db.Model):
 class Industry(db.Model):
     __tablename__ = 'industrys'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    industry_name = db.Column('industry_name',db.String(40))
+    name = db.Column('name',db.String(40))
     created = db.Column(db.DateTime, default=datetime.now(), nullable=False)
     updated = db.Column(db.DateTime, default=datetime.now(), nullable=False)
     created_by = db.Column(db.String(31))
     updated_by = db.Column(db.String(31))
     joboffers = db.relationship("JobOffer",backref="industrys")
 
-    def __init__(self, industry_name, created_by='system', updated_by='system'):
-        self.industry_name = industry_name
+    def __init__(self, name, created_by='system', updated_by='system'):
+        self.name = name
         self.updated = datetime.now()
         self.created_by = created_by
-        self.updated_by = datetime.now()
+        self.updated_by = updated_by
     
     def to_dict(self, is_auth=False):
         result = {
             'id': self.id,
-            'industry_name': self.industry_name,
+            'name': self.name,
             'created': self.created,
             'updated': self.updated,
             'created_by': self.created_by,

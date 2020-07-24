@@ -11,7 +11,7 @@ from datetime import datetime
 
 app = Blueprint('subject', __name__)
 
-@app.route('/oicjob/api/create_subject',methods=["POST"])
+@app.route('/oicjob/api/subject/create',methods=["POST"])
 def create_subject():
     idinfo = default_auth(request.headers['Content-Type'], request.json['token'])
     if idinfo is None:
