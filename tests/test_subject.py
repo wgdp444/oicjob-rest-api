@@ -28,7 +28,7 @@ class TestSubject(BaseTestCase):
             'token': USER_ID,
             'name': name
         }
-        response = self.app.post('/oicjob/api/create_subject', headers=REQUEST_HEADERS,json=request_json)
+        response = self.app.post('/oicjob/api/subject/create', headers=REQUEST_HEADERS,json=request_json)
         assert(json.loads(response.get_data()) == {'result': result})
 
     @parameterized.expand([
