@@ -1,2 +1,5 @@
 *.code-workspace
 .DS_Store
+__pycache__/
+oicjob.db
+test_oicjob.db

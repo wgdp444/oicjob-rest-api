@@ -1,9 +1,10 @@
-version: "3.7"
+version: "2"
 services:
   web:
     build: .
     ports:
-      - "5000:5000"
+      - "4649:4649"
+    mem_limit: 1g
     volumes:
       - ..:/workspace
     environment:
