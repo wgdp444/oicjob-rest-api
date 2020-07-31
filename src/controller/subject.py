@@ -4,6 +4,7 @@ from auth.auth import default_auth
 from database import db
 from controller.modules import common
 import json
+from flask_jwt_extended import jwt_required
 
 import traceback
 
@@ -23,8 +24,7 @@ def create_subject():
     except:
         return jsonify({'result': False}), 500
     
-
-@app.route('/oicjob/api/subject/get',methods=["POST"])
+@app.route('/oicjob/api/subject/gets',methods=["POST"])
 def get_subject_all():
     idinfo = default_auth(request.headers['Content-Type'], request.json['token'])
     if idinfo is None:
@@ -57,13 +57,13 @@ def update_joboffer(id):
     except Exception as e:
         return jsonify({'message': 'failed'}), 500
 
-@app.route('/oicjob/api/subject/delete/<int:subject_id>',methods=["POST"])
-def delete_subject(subject_id):
+@app.route('/oicjob/api/subject/delete/<int:id>',methods=["POST"])
+def delete_subject(id):
     idinfo = default_auth(request.headers['Content-Type'], request.json['token'])   
     if idinfo is None:
         abort(403)
     try:
-        subject = Subject.query.filter_by(id=subject_id).first()
+        subject = Subject.query.filter_by(id=id).first()
         if subject is None:
             return jsonify({'message': 'record not found'}), 400
         db.session.delete(subject)

@@ -7,7 +7,7 @@ from sqlalchemy.exc import IntegrityError
 
 app = Blueprint('user', __name__)
 
-@app.route('/oicjob/api/create_user',methods=["POST"])
+@app.route('/oicjob/api/user/create',methods=["POST"])
 def create_user():
     idinfo = default_auth(request.headers['Content-Type'], request.json['token'])
     if idinfo is None:
@@ -15,10 +15,10 @@ def create_user():
     try:
         db.session.add(User(idinfo['sub'], request.json['subject_id'], request.json['is_admin'], class_number=request.json['class_number']))
         db.session.commit()
-        return jsonify({'result': True})
+        return jsonify({'result': True}), 201
     except IntegrityError as e:
         # print(traceback.format_exc())
-        return hsonify({'result': False})
+        return jsonify({'result': False}), 500
 
 @app.route('/oicjob/api/get_user',methods=["POST"])
 def get_user():

@@ -77,11 +77,12 @@ class JobOffer(db.Model):
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
     company_name = db.Column('company_name', db.String(31), nullable=False)
     industry_id = db.Column('industry_id', db.ForeignKey("industrys.id"))
-    industry = db.relationship('Industry', backref='job_offers', order_by='Industry.id')
-    occupation = db.Column('occupation', db.String(254))
+    industry = db.relationship('Industry', backref='job_offers')
+    occupation = db.Column('occupation', db.String(60), nullable=False)
     max_appicants = db.Column('max_appicants', db.Integer)
     starting_salary = db.Column('starting_salary', db.Integer)
     image_url_text = db.Column('image_url_text', db.Text)
+    # company_street_addresses = db.relationship("CompanyStreetAddress",backref="job_offers")
     created = db.Column(db.DateTime, default=datetime.now(), nullable=False)
     updated = db.Column(db.DateTime, default=datetime.now(), nullable=False)
     created_by = db.Column(db.String(31))
@@ -120,35 +121,6 @@ class JobOffer(db.Model):
     def __repr__(self):
         return '<JobOffer: {}>'.format(self.company_name)
 
-
-# class Company(db.Model):
-#     __tablename__ = 'job_offers'
-#     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
-#     company_id = db.Column('company_id', db.Integer)
-#     occupation = db.Column('occupation', db.Integer)
-#     max_appicants = db.Column('max_appicants', db.Integer)
-#     starting_salary = db.Column('starting_salary', db.Integer)
-#     image_url_db.Text = db.Column('image_url_db.Text', db.Text)
-#     created = db.Column(db.DateTime, default=datetime.now(), nullable=False)
-#     updated = db.Column(db.DateTime, default=datetime.now(), nullable=False)
-#     created_by = db.Column(db.String(31))
-#     updated_by = db.Column(db.String(31))
-
-# def to_dict(self, is_auth=False):
-#     result = {
-#         'id': self.id,
-#         'name': self.name,
-#         'created': self.created,
-#         'updated': self.updated,
-#         'created_by': self.created_by,
-#         'updated_by': self.updated_by
-#     } 
-#     if is_auth:
-#         result['user_list'] = [user.to_dict() for user in self.user_list]   
-#     return result
-# def __repr__(self):
-#     return '<Subject: {}>'.format(self.name)
-
 class Industry(db.Model):
     __tablename__ = 'industrys'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -177,3 +149,36 @@ class Industry(db.Model):
         return result
     def __repr__(self):
         return '<Subject: {}>'.format(self.name)
+
+# class CompanyStreetAddress(db.Model):
+#     __tablename__ = 'company_street_addresses'
+#     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+#     job_offer_id = db.Column('job_offer_id', db.ForeignKey("job_offers.id"))
+#     street_address = db.Column('street_address',db.String(200))
+#     is_main = db.Column('is_main', db.Boolean, nullable=False)
+#     created = db.Column(db.DateTime, default=datetime.now(), nullable=False)
+#     updated = db.Column(db.DateTime, default=datetime.now(), nullable=False)
+#     created_by = db.Column(db.String(31))
+#     updated_by = db.Column(db.String(31))
+#     joboffers = db.relationship("JobOffer",backref="company_street_addresses")
+
+#     def __init__(self, street_address, is_main, created_by='system', updated_by='system'):
+#         self.street_address = street_address
+#         self.is_main = is_main
+#         self.updated = datetime.now()
+#         self.created_by = created_by
+#         self.updated_by = updated_by
+    
+#     def to_dict(self, is_auth=False):
+#         result = {
+#             'id': self.id,
+#             'street_address': self.street_address,
+#             'is_main': self.is_main,
+#             'created': self.created,
+#             'updated': self.updated,
+#             'created_by': self.created_by,
+#             'updated_by': self.updated_by
+#         }    
+#         return result
+#     def __repr__(self):
+#         return '<Subject: {}>'.format(self.name)

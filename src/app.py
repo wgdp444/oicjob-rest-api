@@ -1,14 +1,21 @@
 from flask import Flask, jsonify, request, abort
 from flask_cors import CORS
+from flask_jwt_extended import JWTManager
 from controller import login, user, subject, joboffer
 from database import init_db
 import traceback
+from datetime import timedelta
 
 # init
 app = Flask(__name__)
 app.config.from_object('config.Config')
 CORS(app)
 init_db(app)
+app.config['JWT_SECRET_KEY'] = 'super-secret'  # Change this!
+# jwt有効時間
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=15)
+app.config['JWT_REFRESH_TOKEN_EXPIRES'] = timedelta(days=3)
+jwt = JWTManager(app)
 
 # BluePrint
 app.register_blueprint(login.app)
@@ -18,7 +25,7 @@ app.register_blueprint(joboffer.app)
 
 @app.errorhandler(403)
 def forbidden(e):
-    return jsonify({'result': 'forbidden'})
+    return jsonify({'result': 'forbidden'}), 403
 
 @app.errorhandler(404)
 def not_found(e):

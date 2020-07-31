@@ -6,6 +6,7 @@ from sqlalchemy.exc import IntegrityError
 from controller.modules import common
 import traceback
 from datetime import datetime
+from flask_jwt_extended import jwt_required
 
 app = Blueprint('joboffer', __name__)
 
@@ -15,13 +16,15 @@ def get_joboffer_all():
     if idinfo is None:
         abort(403)
     joboffers = JobOffer.query.all()
+    print(joboffers)
     return jsonify({'joboffers': [joboffer.to_dict() for joboffer in joboffers]})
 
 @app.route('/oicjob/api/joboffer/create',methods=["POST"])
+# @jwt_required
 def create_joboffer():
-    idinfo = default_auth(request.headers['Content-Type'], request.json['token'])
-    if idinfo is None:
-        abort(403)
+    # idinfo = default_auth(request.headers['Content-Type'], request.json['token'])
+    # if idinfo is None:
+    #     abort(403)
     try:
         db.session.add(JobOffer(request.json['company_name'], request.json['industry_id'], 
                                 request.json['occupation'], request.json['max_appicants'],

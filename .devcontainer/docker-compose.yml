@@ -1,12 +1,26 @@
-version: "2"
+version: "2.1"
 services:
   web:
-    build: .
+    build: ../
     ports:
       - "4649:4649"
     mem_limit: 1g
     volumes:
       - ..:/workspace
+    depends_on:
+      - mysql
     environment:
       TZ: "Asia/Tokyo"
     command: "sleep infinity"
+  mysql:
+    image: mysql:8
+    container_name: test_mysql_container
+    environment:
+      - MYSQL_ROOT_PASSWORD=mysql
+      - MYSQL_DATABASE=test
+      - MYSQL_USER=test
+      - MYSQL_PASSWORD=mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql-confd:/etc/mysql/conf.d

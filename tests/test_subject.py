@@ -45,8 +45,9 @@ class TestSubject(BaseTestCase):
         request_json = {
             'token': USER_ID
         }
-        response = self.app.post('/oicjob/api/subject/get', headers=REQUEST_HEADERS,json=request_json)
+        response = self.app.post('/oicjob/api/subject/gets', headers=REQUEST_HEADERS,json=request_json)
         response_dict = json.loads(response.get_data())
+        print(response_dict['subjects'])
         # all
         # 変動する時刻があるため項目ごとのテスト
         for subject in response_dict['subjects']:
