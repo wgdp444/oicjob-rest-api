@@ -3,3 +3,4 @@
 __pycache__/
 oicjob.db
 test_oicjob.db
+.pytest_cache
