@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request, abort
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
-from controller import login, user, subject, joboffer
+from controller import login, user, subject, joboffer, pdf, industry, area
 from database import init_db
 import traceback
 from datetime import timedelta
@@ -11,9 +11,10 @@ app = Flask(__name__)
 app.config.from_object('config.Config')
 CORS(app)
 init_db(app)
-app.config['JWT_SECRET_KEY'] = 'super-secret'  # Change this!
+app.config['JWT_SECRET_KEY'] = 'test'  # Change this!
 # jwt有効時間
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=15)
+# app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=15)
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=1)
 app.config['JWT_REFRESH_TOKEN_EXPIRES'] = timedelta(days=3)
 jwt = JWTManager(app)
 
@@ -22,6 +23,9 @@ app.register_blueprint(login.app)
 app.register_blueprint(user.app)
 app.register_blueprint(subject.app)
 app.register_blueprint(joboffer.app)
+app.register_blueprint(pdf.app)
+app.register_blueprint(industry.app)
+app.register_blueprint(area.app)
 
 @app.errorhandler(403)
 def forbidden(e):

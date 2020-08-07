@@ -82,7 +82,7 @@ class JobOffer(db.Model):
     max_appicants = db.Column('max_appicants', db.Integer)
     starting_salary = db.Column('starting_salary', db.Integer)
     image_url_text = db.Column('image_url_text', db.Text)
-    # company_street_addresses = db.relationship("CompanyStreetAddress",backref="job_offers")
+    area = db.relationship("Area",backref="job_offers", uselist=False)
     created = db.Column(db.DateTime, default=datetime.now(), nullable=False)
     updated = db.Column(db.DateTime, default=datetime.now(), nullable=False)
     created_by = db.Column(db.String(31))
@@ -117,6 +117,10 @@ class JobOffer(db.Model):
             result['industry'] = {}
         else:
             result['industry'] = self.industry.to_dict(),
+        if self.area is None:
+            result['area'] = {}
+        else:
+            result['area'] = self.area.to_dict()
         return result
     def __repr__(self):
         return '<JobOffer: {}>'.format(self.company_name)
@@ -150,35 +154,33 @@ class Industry(db.Model):
     def __repr__(self):
         return '<Subject: {}>'.format(self.name)
 
-# class CompanyStreetAddress(db.Model):
-#     __tablename__ = 'company_street_addresses'
-#     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-#     job_offer_id = db.Column('job_offer_id', db.ForeignKey("job_offers.id"))
-#     street_address = db.Column('street_address',db.String(200))
-#     is_main = db.Column('is_main', db.Boolean, nullable=False)
-#     created = db.Column(db.DateTime, default=datetime.now(), nullable=False)
-#     updated = db.Column(db.DateTime, default=datetime.now(), nullable=False)
-#     created_by = db.Column(db.String(31))
-#     updated_by = db.Column(db.String(31))
-#     joboffers = db.relationship("JobOffer",backref="company_street_addresses")
+class Area(db.Model):
+    __tablename__ = 'areas'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    prefecture = db.Column('prefecture',db.String(50))
+    job_offer_id = db.Column('job_offer_id', db.ForeignKey("job_offers.id"))
+    # is_main = db.Column('is_main', db.Boolean, nullable=False)
+    created = db.Column(db.DateTime, default=datetime.now(), nullable=False)
+    updated = db.Column(db.DateTime, default=datetime.now(), nullable=False)
+    created_by = db.Column(db.String(31))
+    updated_by = db.Column(db.String(31))
 
-#     def __init__(self, street_address, is_main, created_by='system', updated_by='system'):
-#         self.street_address = street_address
-#         self.is_main = is_main
-#         self.updated = datetime.now()
-#         self.created_by = created_by
-#         self.updated_by = updated_by
+    def __init__(self, prefecture, job_offer_id, created_by='system', updated_by='system'):
+        self.prefecture = prefecture
+        self.job_offer_id = job_offer_id
+        self.updated = datetime.now()
+        self.created_by = created_by
+        self.updated_by = updated_by
     
-#     def to_dict(self, is_auth=False):
-#         result = {
-#             'id': self.id,
-#             'street_address': self.street_address,
-#             'is_main': self.is_main,
-#             'created': self.created,
-#             'updated': self.updated,
-#             'created_by': self.created_by,
-#             'updated_by': self.updated_by
-#         }    
-#         return result
-#     def __repr__(self):
-#         return '<Subject: {}>'.format(self.name)
+    def to_dict(self, is_auth=False):
+        result = {
+            'id': self.id,
+            'prefecture': self.prefecture,
+            'created': self.created,
+            'updated': self.updated,
+            'created_by': self.created_by,
+            'updated_by': self.updated_by
+        }
+        return result
+    def __repr__(self):
+        return '<Subject: {}>'.format(self.prefecture)

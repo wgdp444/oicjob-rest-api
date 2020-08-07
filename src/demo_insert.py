@@ -1,5 +1,5 @@
 from database import db
-from models.models import JobOffer, Industry, Subject
+from models.models import JobOffer, Industry, Subject, Area
 from app import app
 
 
@@ -27,6 +27,16 @@ with app.app_context():
                     "データマーケター学科", "ネット・動画クリエイター学科", "CGデザイン学科"]
     for insert_data in insert_datas:
         db.session.add(Subject(insert_data))
+    
+    insert_datas = [
+        ['岡山県,東京都', '1'],
+        ['岡山県,大阪府,京都府', '2'],
+        ['岡山県', '3'],
+        ['岡山県', '4'],
+        ['沖縄県,北海道', '5'],
+    ]
+    for insert_data in insert_datas:
+        db.session.add(Area(*insert_data))
 
     db.session.commit()
     

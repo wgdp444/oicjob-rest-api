@@ -11,16 +11,27 @@ from flask_jwt_extended import jwt_required
 app = Blueprint('joboffer', __name__)
 
 @app.route('/oicjob/api/joboffer/gets',methods=["POST"])
+@jwt_required
 def get_joboffer_all():
     idinfo = default_auth(request.headers['Content-Type'], request.json['token'])
     if idinfo is None:
         abort(403)
     joboffers = JobOffer.query.all()
-    print(joboffers)
+    print(request.headers)
     return jsonify({'joboffers': [joboffer.to_dict() for joboffer in joboffers]})
 
+@app.route('/oicjob/api/joboffer/get/<int:id>',methods=["POST"])
+@jwt_required
+def get_joboffer(id):
+    idinfo = default_auth(request.headers['Content-Type'], request.json['token'])
+    if idinfo is None:
+        abort(403)
+    joboffer = JobOffer.query.filter_by(id=id).first()
+    return jsonify(joboffer.to_dict())
+
+
 @app.route('/oicjob/api/joboffer/create',methods=["POST"])
-# @jwt_required
+@jwt_required
 def create_joboffer():
     # idinfo = default_auth(request.headers['Content-Type'], request.json['token'])
     # if idinfo is None:
